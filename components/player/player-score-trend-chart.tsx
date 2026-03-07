@@ -65,10 +65,7 @@ export function PlayerScoreTrendChart({
                   borderRadius: "8px",
                 }}
                 labelFormatter={(value) => `Game ${value}`}
-                formatter={(value: number, _name: string, props: { payload: { isWinner: boolean } }) => [
-                  `${value}${props.payload.isWinner ? " (Won)" : ""}`,
-                  playerName,
-                ]}
+                formatter={(value) => [value, playerName]}
               />
               <ReferenceLine
                 y={avgScore}
