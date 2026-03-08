@@ -359,39 +359,35 @@ export async function getPlayerGameHistory(uid: string) {
   const games = await getGamesWithWinners();
   const playerGames = games.filter((g) => g.players.some((p) => p.uid === uid));
 
-  // Get results for this player
+  // Get all input metric results to build per-game totals and ranks.
   const results = await sql`
-    SELECT r.game_id, r.score
+    SELECT r.game_id, r.player_uid, r.score
     FROM results r
     JOIN metrics m ON m.uid = r.metric_uid
-    WHERE r.player_uid = ${uid} AND m.type = 'input'
+    WHERE m.type = 'input'
   `;
 
-  // Build game totals
-  const gameTotals: Record<number, number> = {};
-  for (const r of results as Array<{ game_id: number; score: number }>) {
-    gameTotals[r.game_id] = (gameTotals[r.game_id] || 0) + r.score;
+  // Build game totals by player.
+  const gameTotalsByPlayer: Record<number, Record<string, number>> = {};
+  for (const r of results as Array<{ game_id: number; player_uid: string; score: number }>) {
+    if (!gameTotalsByPlayer[r.game_id]) {
+      gameTotalsByPlayer[r.game_id] = {};
+    }
+    gameTotalsByPlayer[r.game_id][r.player_uid] =
+      (gameTotalsByPlayer[r.game_id][r.player_uid] || 0) + r.score;
   }
 
   return playerGames.map((game) => {
-    // Calculate all player totals for this game to determine rank
-    const allTotals = game.players.map((p) => {
-      const total = games
-        .find((g) => g.id === game.id)
-        ?.players.reduce((sum, _) => {
-          return gameTotals[game.id] || 0;
-        }, 0);
-      return { uid: p.uid, total: total || 0 };
-    });
-
-    const playerTotal = gameTotals[game.id] || 0;
-    const sortedTotals = [...new Set(Object.values(gameTotals))].sort((a, b) => b - a);
+    const totalsForGame = gameTotalsByPlayer[game.id] || {};
+    const playerTotal = totalsForGame[uid] || 0;
+    const sortedTotals = [...new Set(Object.values(totalsForGame))].sort((a, b) => b - a);
     const rank = sortedTotals.indexOf(playerTotal) + 1;
 
     return {
       gameId: game.id,
       date: game.date,
       score: playerTotal,
+      winningScore: game.maxTotal,
       rank,
       isWinner: game.winners.includes(uid),
       winnerNames: game.winnerNames,

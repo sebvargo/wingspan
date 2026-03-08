@@ -16,7 +16,9 @@ interface PlayerScoreTrendChartProps {
   gameHistory: Array<{
     gameId: number;
     score: number;
+    winningScore: number;
     isWinner: boolean;
+    winnerNames?: string[];
   }>;
   avgScore: number;
   playerName: string;
@@ -33,7 +35,10 @@ export function PlayerScoreTrendChart({
     .map((game) => ({
       game: game.gameId,
       score: game.score,
+      winningScore: game.winningScore,
+      gapToWin: Math.max(game.winningScore - game.score, 0),
       isWinner: game.isWinner,
+      winnerNames: game.winnerNames ?? [],
     }));
 
   return (
@@ -64,8 +69,21 @@ export function PlayerScoreTrendChart({
                   border: "1px solid #D7ECE8",
                   borderRadius: "8px",
                 }}
-                labelFormatter={(value) => `Game ${value}`}
-                formatter={(value) => [value, playerName]}
+                labelFormatter={(value, payload) => {
+                  const winners = payload?.[0]?.payload?.winnerNames as string[] | undefined;
+                  const winnerLabel = winners && winners.length > 0 ? winners.join(", ") : "—";
+                  return `Game ${value} | Winner: ${winnerLabel}`;
+                }}
+                formatter={(value, name, item) => {
+                  const numericValue = Number(value);
+                  if (name === "Winning Score") {
+                    return [numericValue, "Winning Score"];
+                  }
+
+                  const gapToWin = Number(item?.payload?.gapToWin || 0);
+                  const label = gapToWin > 0 ? `${playerName} (${gapToWin} behind)` : `${playerName} (won)`;
+                  return [numericValue, label];
+                }}
               />
               <ReferenceLine
                 y={avgScore}
@@ -96,11 +114,22 @@ export function PlayerScoreTrendChart({
                   />
                 )}
               />
+              <Line
+                type="monotone"
+                dataKey="winningScore"
+                name="Winning Score"
+                stroke="#F26A5A"
+                strokeWidth={2}
+                strokeDasharray="4 4"
+                dot={false}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
         <p className="mt-2 text-center text-sm text-wing-brown">
-          Orange dots indicate wins
+          <span className="text-sky-blue">Blue line</span> is {playerName};{" "}
+          <span className="text-coral">dashed coral line</span> is game-winning score;{" "}
+          <span className="text-peach">orange dots</span> indicate wins.
         </p>
       </CardContent>
     </Card>
