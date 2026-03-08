@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
+import { NewGameButton } from "@/components/layout/new-game-button";
 import { SidebarBreadcrumbs } from "@/components/layout/sidebar-breadcrumbs";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -10,10 +10,8 @@ import {
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { getAppCounts } from "@/lib/queries";
 import { cn } from "@/lib/utils";
-import { PlusCircle } from "lucide-react";
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Playfair_Display } from "next/font/google";
-import Link from "next/link";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -63,12 +61,7 @@ export default async function RootLayout({
                 <SidebarTrigger className="-ml-1" />
                 <Separator orientation="vertical" className="h-4" />
                 <SidebarBreadcrumbs />
-                <Link href="/games/new" className="ml-auto">
-                  <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    New Game
-                  </Button>
-                </Link>
+                <NewGameButton />
               </header>
               <div className="flex flex-1 flex-col p-4 md:p-6">
                 <main className="w-full">{children}</main>
