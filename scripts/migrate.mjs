@@ -17,7 +17,14 @@ async function migrate() {
   console.log("Running migrations...");
   
   const schema = readFileSync(join(__dirname, "001-create-tables.sql"), "utf-8");
-  await sql(schema);
+  const statements = schema
+    .split(/;\s*$/m)
+    .map((statement) => statement.trim())
+    .filter(Boolean);
+
+  for (const statement of statements) {
+    await sql(statement);
+  }
   
   console.log("Migrations complete!");
 }
