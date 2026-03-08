@@ -8,7 +8,6 @@ import {
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -18,7 +17,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { Bird, LayoutDashboard, PlusCircle, Trophy, Users } from "lucide-react";
+import { Bird, LayoutDashboard, Trophy, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -119,20 +118,6 @@ export function AppSidebar({ playerCount, gameCount }: AppSidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              tooltip="New Game"
-              className="bg-accent text-accent-foreground hover:bg-accent/90 hover:text-accent-foreground"
-              render={<Link href="/games/new" />}
-            >
-              <PlusCircle />
-              <span>New Game</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
