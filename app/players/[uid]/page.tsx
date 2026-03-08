@@ -44,8 +44,10 @@ export default async function PlayerProfilePage({ params }: PlayerProfilePagePro
 
   // Calculate group averages for comparison
   const groupAvgByMetric: Record<string, number> = {};
+  const metricMaxByMetric: Record<string, number> = {};
   for (const metric of metrics) {
     const allAvgs = leaderboard.map((e) => e.avgByMetric[metric.uid] || 0);
+    metricMaxByMetric[metric.uid] = Math.max(...allAvgs, 0);
     groupAvgByMetric[metric.uid] =
       allAvgs.reduce((a, b) => a + b, 0) / allAvgs.length;
   }
@@ -127,6 +129,7 @@ export default async function PlayerProfilePage({ params }: PlayerProfilePagePro
         <PlayerRadarChart
           avgByMetric={playerStats.avgByMetric}
           groupAvgByMetric={groupAvgByMetric}
+          metricMaxByMetric={metricMaxByMetric}
           metrics={metrics}
           playerName={playerStats.player.display_name}
         />

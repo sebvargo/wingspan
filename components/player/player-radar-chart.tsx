@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   Radar,
   RadarChart,
@@ -16,6 +17,7 @@ import type { Metric } from "@/lib/types";
 interface PlayerRadarChartProps {
   avgByMetric: Record<string, number>;
   groupAvgByMetric: Record<string, number>;
+  metricMaxByMetric: Record<string, number>;
   metrics: Metric[];
   playerName: string;
 }
@@ -23,14 +25,26 @@ interface PlayerRadarChartProps {
 export function PlayerRadarChart({
   avgByMetric,
   groupAvgByMetric,
+  metricMaxByMetric,
   metrics,
   playerName,
 }: PlayerRadarChartProps) {
-  const data = metrics.map((metric) => ({
-    metric: metric.display_name,
-    player: Math.round((avgByMetric[metric.uid] || 0) * 10) / 10,
-    group: Math.round((groupAvgByMetric[metric.uid] || 0) * 10) / 10,
-  }));
+  const data = useMemo(() => {
+    return metrics.map((metric) => {
+      const playerRaw = Math.round((avgByMetric[metric.uid] || 0) * 10) / 10;
+      const groupRaw = Math.round((groupAvgByMetric[metric.uid] || 0) * 10) / 10;
+      const metricMax = metricMaxByMetric[metric.uid] || 0;
+
+      return {
+        metric: metric.display_name,
+        player: metricMax > 0 ? playerRaw / metricMax : 0,
+        group: metricMax > 0 ? groupRaw / metricMax : 0,
+        playerRaw,
+        groupRaw,
+        metricMax,
+      };
+    });
+  }, [avgByMetric, groupAvgByMetric, metricMaxByMetric, metrics]);
 
   return (
     <Card>
@@ -48,10 +62,37 @@ export function PlayerRadarChart({
               />
               <PolarRadiusAxis
                 angle={30}
-                domain={[0, "auto"]}
+                domain={[0, 1]}
+                tickFormatter={(value) => `${Math.round(Number(value) * 100)}%`}
                 tick={{ fill: "#7A6A5C", fontSize: 10 }}
               />
               <Tooltip
+                itemSorter={(item) => {
+                  const value = typeof item.value === "number" ? item.value : Number(item.value);
+                  return Number.isNaN(value) ? 0 : -value;
+                }}
+                formatter={(value, name, item) => {
+                  const normalizedValue =
+                    typeof value === "number" ? value : Number(value) || 0;
+                  const rawField = item.dataKey === "player" ? "playerRaw" : "groupRaw";
+                  const rawValue = item?.payload?.[rawField];
+                  const numericRaw =
+                    typeof rawValue === "number" ? rawValue : Number(rawValue) || 0;
+
+                  return [
+                    `${Math.round(numericRaw * 10) / 10} (${Math.round(normalizedValue * 100)}%)`,
+                    name,
+                  ];
+                }}
+                labelFormatter={(label, payload) => {
+                  const maxForMetric = payload?.[0]?.payload?.metricMax;
+                  const numericMax =
+                    typeof maxForMetric === "number" ? maxForMetric : Number(maxForMetric) || 0;
+                  if (!numericMax) {
+                    return String(label);
+                  }
+                  return `${String(label)} (max ${Math.round(numericMax * 10) / 10})`;
+                }}
                 contentStyle={{
                   backgroundColor: "#FFFFFF",
                   border: "1px solid #D7ECE8",
