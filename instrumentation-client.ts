@@ -2,6 +2,7 @@ import posthog from 'posthog-js';
 
 const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
+const posthogUiHost = process.env.NEXT_PUBLIC_POSTHOG_UI_HOST;
 
 declare global {
   interface Window {
@@ -26,6 +27,7 @@ function getButtonLabel(button: HTMLElement): string {
 if (posthogKey && posthogHost) {
   posthog.init(posthogKey, {
     api_host: posthogHost,
+    ui_host: posthogUiHost ?? 'https://us.posthog.com',
     defaults: '2026-01-30',
   });
 
