@@ -7,9 +7,10 @@ import { deleteGame } from "@/lib/actions";
 
 interface DeleteGameButtonProps {
   gameId: number;
+  size?: "default" | "sm" | "lg" | "icon";
 }
 
-export function DeleteGameButton({ gameId }: DeleteGameButtonProps) {
+export function DeleteGameButton({ gameId, size = "default" }: DeleteGameButtonProps) {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = () => {
@@ -28,6 +29,7 @@ export function DeleteGameButton({ gameId }: DeleteGameButtonProps) {
   return (
     <Button
       variant="destructive"
+      size={size}
       onClick={handleDelete}
       disabled={isPending}
       className="gap-2"
