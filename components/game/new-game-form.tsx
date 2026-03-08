@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScoreEntryGrid } from "./score-entry-grid";
-import { createGame, createPlayer } from "@/lib/actions";
+import { createGame, createPlayer, updateGame } from "@/lib/actions";
 import { X, Plus, Loader2 } from "lucide-react";
 import type { Player, Metric } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -15,16 +15,42 @@ interface NewGameFormProps {
   allPlayers: Player[];
   metrics: Metric[];
   playerStats: Record<string, { avgScore: number; gamesPlayed: number; wins: number }>;
+  mode?: "create" | "edit";
+  gameId?: number;
+  initialDate?: string | null;
+  initialLocation?: string | null;
+  initialNotes?: string | null;
+  initialSelectedPlayerUids?: string[];
+  initialScores?: Record<string, Record<string, number>>;
+  initialAwards?: Record<string, string>;
 }
 
-export function NewGameForm({ allPlayers, metrics, playerStats }: NewGameFormProps) {
+export function NewGameForm({
+  allPlayers,
+  metrics,
+  playerStats,
+  mode = "create",
+  gameId,
+  initialDate,
+  initialLocation,
+  initialNotes,
+  initialSelectedPlayerUids,
+  initialScores,
+  initialAwards,
+}: NewGameFormProps) {
   const [players, setPlayers] = useState<Player[]>(allPlayers);
-  const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
-  const [scores, setScores] = useState<Record<string, Record<string, number>>>({});
-  const [awards, setAwards] = useState<Record<string, string>>({});
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [location, setLocation] = useState("");
-  const [notes, setNotes] = useState("");
+  const [selectedPlayers, setSelectedPlayers] = useState<Player[]>(
+    allPlayers.filter((player) => initialSelectedPlayerUids?.includes(player.uid))
+  );
+  const [scores, setScores] = useState<Record<string, Record<string, number>>>(
+    initialScores ?? {}
+  );
+  const [awards, setAwards] = useState<Record<string, string>>(initialAwards ?? {});
+  const [date, setDate] = useState(
+    initialDate ?? new Date().toISOString().split("T")[0]
+  );
+  const [location, setLocation] = useState(initialLocation ?? "");
+  const [notes, setNotes] = useState(initialNotes ?? "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showNewPlayerForm, setShowNewPlayerForm] = useState(false);
@@ -119,8 +145,12 @@ export function NewGameForm({ allPlayers, metrics, playerStats }: NewGameFormPro
     }
     formData.set("results", JSON.stringify(results));
     formData.set("awards", JSON.stringify(awards));
+    if (mode === "edit" && gameId) {
+      formData.set("gameId", String(gameId));
+    }
 
-    const result = await createGame(formData);
+    const result =
+      mode === "edit" && gameId ? await updateGame(formData) : await createGame(formData);
 
     if (result?.error) {
       setError(
@@ -279,6 +309,8 @@ export function NewGameForm({ allPlayers, metrics, playerStats }: NewGameFormPro
               <ScoreEntryGrid
                 players={selectedPlayers}
                 metrics={metrics}
+                initialScores={initialScores}
+                initialAwards={initialAwards}
                 onScoresChange={handleScoresChange}
                 onAwardsChange={handleAwardsChange}
               />
@@ -297,7 +329,7 @@ export function NewGameForm({ allPlayers, metrics, playerStats }: NewGameFormPro
           size="lg"
         >
           {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Save Game
+          {mode === "edit" ? "Save Changes" : "Save Game"}
         </Button>
       </div>
 

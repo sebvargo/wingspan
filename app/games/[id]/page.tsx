@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScoreGrid } from "@/components/game/score-grid";
+import { DeleteGameButton } from "@/components/game/delete-game-button";
 import { Trophy, Calendar, MapPin, ArrowLeft, FileText } from "lucide-react";
 import { getGameById, getMetrics, getLeaderboard } from "@/lib/queries";
 import { formatDate } from "@/lib/utils";
@@ -36,28 +37,36 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Link href="/games">
-          <Button variant="outline" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-charcoal">
-            Game {game.id}
-          </h1>
-          <div className="mt-1 flex items-center gap-4 text-sm text-wing-brown">
-            <span className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              {formatDate(game.date)}
-            </span>
-            {game.location && (
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <Link href="/games">
+            <Button variant="outline" size="icon">
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          </Link>
+          <div>
+            <h1 className="font-serif text-3xl font-bold text-charcoal">
+              Game {game.id}
+            </h1>
+            <div className="mt-1 flex items-center gap-4 text-sm text-wing-brown">
               <span className="flex items-center gap-1">
-                <MapPin className="h-4 w-4" />
-                {game.location}
+                <Calendar className="h-4 w-4" />
+                {formatDate(game.date)}
               </span>
-            )}
+              {game.location && (
+                <span className="flex items-center gap-1">
+                  <MapPin className="h-4 w-4" />
+                  {game.location}
+                </span>
+              )}
+            </div>
           </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link href={`/games/${game.id}/edit`}>
+            <Button variant="outline">Edit Game</Button>
+          </Link>
+          <DeleteGameButton gameId={game.id} />
         </div>
       </div>
 

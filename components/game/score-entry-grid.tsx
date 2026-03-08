@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import type { Player, Metric } from "@/lib/types";
@@ -8,6 +8,8 @@ import type { Player, Metric } from "@/lib/types";
 interface ScoreEntryGridProps {
   players: Player[];
   metrics: Metric[];
+  initialScores?: Record<string, Record<string, number>>;
+  initialAwards?: Record<string, string>;
   onScoresChange: (scores: Record<string, Record<string, number>>) => void;
   onAwardsChange: (awards: Record<string, string>) => void;
 }
@@ -15,26 +17,53 @@ interface ScoreEntryGridProps {
 export function ScoreEntryGrid({
   players,
   metrics,
+  initialScores,
+  initialAwards,
   onScoresChange,
   onAwardsChange,
 }: ScoreEntryGridProps) {
-  const [scores, setScores] = useState<Record<string, Record<string, number>>>({});
-  const [awards, setAwards] = useState<Record<string, string>>({});
+  const [scoreState, setScoreState] = useState<Record<string, Record<string, number>>>(
+    () => initialScores ?? {}
+  );
+  const [awardState, setAwardState] = useState<Record<string, string>>(
+    () => initialAwards ?? {}
+  );
 
-  const inputMetrics = metrics.filter((m) => m.type === "input");
-  const awardMetrics = metrics.filter((m) => m.type === "award");
+  const inputMetrics = useMemo(
+    () => metrics.filter((m) => m.type === "input"),
+    [metrics]
+  );
+  const awardMetrics = useMemo(
+    () => metrics.filter((m) => m.type === "award"),
+    [metrics]
+  );
 
-  // Initialize scores for all players and metrics
-  useEffect(() => {
-    const initialScores: Record<string, Record<string, number>> = {};
+  const scores = useMemo(() => {
+    const nextScores: Record<string, Record<string, number>> = {};
+
     for (const player of players) {
-      initialScores[player.uid] = {};
+      nextScores[player.uid] = {};
       for (const metric of inputMetrics) {
-        initialScores[player.uid][metric.uid] = 0;
+        nextScores[player.uid][metric.uid] = scoreState[player.uid]?.[metric.uid] ?? 0;
       }
     }
-    setScores(initialScores);
-  }, [players, inputMetrics]);
+
+    return nextScores;
+  }, [players, inputMetrics, scoreState]);
+
+  const awards = useMemo(() => {
+    const nextAwards: Record<string, string> = {};
+    const validPlayerUids = new Set(players.map((player) => player.uid));
+    const validAwardMetricUids = new Set(awardMetrics.map((metric) => metric.uid));
+
+    for (const [metricUid, playerUid] of Object.entries(awardState)) {
+      if (validAwardMetricUids.has(metricUid) && validPlayerUids.has(playerUid)) {
+        nextAwards[metricUid] = playerUid;
+      }
+    }
+
+    return nextAwards;
+  }, [players, awardMetrics, awardState]);
 
   // Notify parent of changes
   useEffect(() => {
@@ -49,7 +78,7 @@ export function ScoreEntryGrid({
     const numValue = parseInt(value, 10);
     if (isNaN(numValue) || numValue < 0) return;
 
-    setScores((prev) => ({
+    setScoreState((prev) => ({
       ...prev,
       [playerUid]: {
         ...prev[playerUid],
@@ -59,7 +88,7 @@ export function ScoreEntryGrid({
   };
 
   const handleAwardChange = (metricUid: string, playerUid: string) => {
-    setAwards((prev) => ({
+    setAwardState((prev) => ({
       ...prev,
       [metricUid]: prev[metricUid] === playerUid ? "" : playerUid,
     }));
