@@ -12,8 +12,8 @@ import { getAppCounts } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 import { PlusCircle } from "lucide-react";
 import type { Metadata, Viewport } from "next";
-import Link from "next/link";
 import { Inter, JetBrains_Mono, Playfair_Display } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -51,7 +51,7 @@ export default async function RootLayout({
         "font-sans",
         inter.variable,
         jetBrainsMono.variable,
-        playfairDisplay.variable
+        playfairDisplay.variable,
       )}
     >
       <body className="min-h-screen bg-background antialiased">
