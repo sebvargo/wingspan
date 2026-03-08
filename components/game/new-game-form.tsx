@@ -172,7 +172,7 @@ export function NewGameForm({
           <CardContent className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-charcoal">
+                <label className="mb-1.5 block text-sm font-medium text-foreground">
                   Date
                 </label>
                 <Input
@@ -182,7 +182,7 @@ export function NewGameForm({
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-charcoal">
+                <label className="mb-1.5 block text-sm font-medium text-foreground">
                   Location
                 </label>
                 <Input
@@ -193,11 +193,11 @@ export function NewGameForm({
               </div>
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-charcoal">
+              <label className="mb-1.5 block text-sm font-medium text-foreground">
                 Notes
               </label>
               <textarea
-                className="flex min-h-[80px] w-full rounded-md border border-wing-brown/30 bg-card px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-blue focus-visible:ring-offset-2"
+                className="flex min-h-[80px] w-full rounded-md border border-muted-foreground/30 bg-card px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 placeholder="Any notes about this game..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
@@ -221,8 +221,8 @@ export function NewGameForm({
                     className={cn(
                       "rounded-full px-4 py-2 text-sm font-medium transition-colors",
                       isSelected
-                        ? "bg-sky-blue text-white"
-                        : "bg-pale-aqua text-charcoal hover:bg-turquoise/30"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-secondary text-foreground hover:bg-secondary/80"
                     )}
                   >
                     {player.display_name}
@@ -231,7 +231,7 @@ export function NewGameForm({
               })}
               <button
                 onClick={() => setShowNewPlayerForm(true)}
-                className="flex items-center gap-1 rounded-full border-2 border-dashed border-wing-brown/30 px-4 py-2 text-sm font-medium text-wing-brown transition-colors hover:border-sky-blue hover:text-sky-blue"
+                className="flex items-center gap-1 rounded-full border-2 border-dashed border-muted-foreground/30 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary"
               >
                 <Plus className="h-4 w-4" />
                 Add Player
@@ -239,12 +239,12 @@ export function NewGameForm({
             </div>
 
             {showNewPlayerForm && (
-              <div className="rounded-lg bg-pale-aqua/50 p-4">
+              <div className="rounded-lg bg-secondary/60 p-4">
                 <div className="mb-3 flex items-center justify-between">
-                  <span className="text-sm font-medium text-charcoal">New Player</span>
+                  <span className="text-sm font-medium text-foreground">New Player</span>
                   <button
                     onClick={() => setShowNewPlayerForm(false)}
-                    className="text-wing-brown hover:text-charcoal"
+                    className="text-muted-foreground hover:text-foreground"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -275,7 +275,7 @@ export function NewGameForm({
 
             {selectedPlayers.length > 0 && (
               <div>
-                <p className="mb-2 text-sm font-medium text-wing-brown">
+                <p className="mb-2 text-sm font-medium text-muted-foreground">
                   Selected ({selectedPlayers.length}):
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -319,7 +319,7 @@ export function NewGameForm({
         )}
 
         {error && (
-          <div className="rounded-lg bg-coral/10 p-4 text-sm text-coral">{error}</div>
+          <div className="rounded-lg bg-destructive/10 p-4 text-sm text-destructive">{error}</div>
         )}
 
         <Button
@@ -340,7 +340,7 @@ export function NewGameForm({
           </CardHeader>
           <CardContent className="space-y-4">
             {selectedPlayers.length === 0 ? (
-              <p className="text-sm text-wing-brown">
+              <p className="text-sm text-muted-foreground">
                 Select players to see their historical stats
               </p>
             ) : (
@@ -349,20 +349,20 @@ export function NewGameForm({
                 return (
                   <div
                     key={player.uid}
-                    className="rounded-lg bg-pale-aqua/50 p-3"
+                    className="rounded-lg bg-secondary/60 p-3"
                   >
-                    <p className="font-medium text-charcoal">
+                    <p className="font-medium text-foreground">
                       {player.display_name}
                     </p>
                     {stats ? (
-                      <div className="mt-1 text-sm text-wing-brown">
+                      <div className="mt-1 text-sm text-muted-foreground">
                         <p>
                           {stats.gamesPlayed} games, {stats.wins} wins
                         </p>
                         <p>Avg: {Math.round(stats.avgScore * 10) / 10}</p>
                       </div>
                     ) : (
-                      <p className="mt-1 text-sm text-wing-brown">No games yet</p>
+                      <p className="mt-1 text-sm text-muted-foreground">No games yet</p>
                     )}
                   </div>
                 );

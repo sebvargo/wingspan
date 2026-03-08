@@ -107,8 +107,8 @@ export function ScoreEntryGrid({
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-pale-aqua">
-            <th className="px-4 py-3 text-left text-sm font-medium text-wing-brown">
+          <tr className="border-b border-border">
+            <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
               Category
             </th>
             {players.map((player) => {
@@ -119,7 +119,7 @@ export function ScoreEntryGrid({
                   key={player.uid}
                   className={cn(
                     "px-4 py-3 text-center text-sm font-medium",
-                    isLeading ? "bg-sky-blue/10 text-sky-blue" : "text-charcoal"
+                    isLeading ? "bg-primary/10 text-primary" : "text-foreground"
                   )}
                 >
                   {player.display_name}
@@ -130,8 +130,8 @@ export function ScoreEntryGrid({
         </thead>
         <tbody>
           {inputMetrics.map((metric) => (
-            <tr key={metric.uid} className="border-b border-pale-aqua/50">
-              <td className="px-4 py-3 text-sm font-medium text-charcoal">
+            <tr key={metric.uid} className="border-b border-border/60">
+              <td className="px-4 py-3 text-sm font-medium text-foreground">
                 {metric.display_name}
               </td>
               {players.map((player) => {
@@ -140,7 +140,7 @@ export function ScoreEntryGrid({
                 return (
                   <td
                     key={player.uid}
-                    className={cn("px-2 py-2", isLeading && "bg-sky-blue/5")}
+                    className={cn("px-2 py-2", isLeading && "bg-primary/5")}
                   >
                     <Input
                       type="number"
@@ -156,8 +156,8 @@ export function ScoreEntryGrid({
               })}
             </tr>
           ))}
-          <tr className="border-t-2 border-charcoal bg-pale-aqua/30">
-            <td className="px-4 py-3 text-sm font-bold text-charcoal">Total</td>
+          <tr className="border-t-2 border-foreground bg-secondary/40">
+            <td className="px-4 py-3 text-sm font-bold text-foreground">Total</td>
             {players.map((player) => {
               const total = getTotalForPlayer(player.uid);
               const isLeading = total === maxTotal && total > 0;
@@ -165,8 +165,8 @@ export function ScoreEntryGrid({
                 <td
                   key={player.uid}
                   className={cn(
-                    "px-4 py-3 text-center text-lg font-bold",
-                    isLeading ? "bg-sky-blue/20 text-sky-blue" : "text-charcoal"
+                    "px-4 py-3 text-center text-lg font-mono font-bold tabular-nums",
+                    isLeading ? "bg-primary/20 text-primary" : "text-foreground"
                   )}
                 >
                   {total}
@@ -175,8 +175,8 @@ export function ScoreEntryGrid({
             })}
           </tr>
           {awardMetrics.map((metric) => (
-            <tr key={metric.uid} className="border-b border-pale-aqua/50">
-              <td className="px-4 py-3 text-sm font-medium text-charcoal">
+          <tr key={metric.uid} className="border-b border-border/60">
+              <td className="px-4 py-3 text-sm font-medium text-foreground">
                 {metric.display_name}
               </td>
               {players.map((player) => (
@@ -186,7 +186,7 @@ export function ScoreEntryGrid({
                     name={`award-${metric.uid}`}
                     checked={awards[metric.uid] === player.uid}
                     onChange={() => handleAwardChange(metric.uid, player.uid)}
-                    className="h-4 w-4 cursor-pointer accent-sky-blue"
+                    className="h-4 w-4 cursor-pointer accent-primary"
                   />
                 </td>
               ))}

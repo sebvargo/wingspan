@@ -2,13 +2,11 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Trophy,
   TrendingUp,
   Target,
   Calendar,
-  ArrowLeft,
   Medal,
   Zap,
 } from "lucide-react";
@@ -39,8 +37,6 @@ export default async function PlayerProfilePage({ params }: PlayerProfilePagePro
   if (!playerStats) {
     notFound();
   }
-
-  const playerEntry = leaderboard.find((e) => e.player.uid === uid);
 
   // Calculate group averages for comparison
   const groupAvgByMetric: Record<string, number> = {};
@@ -87,33 +83,19 @@ export default async function PlayerProfilePage({ params }: PlayerProfilePagePro
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Link href="/players">
-          <Button variant="outline" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-charcoal">
-            {playerStats.player.display_name}
-          </h1>
-          <p className="mt-1 text-wing-brown">
-            Rank #{playerEntry?.rank ?? "—"} on the leaderboard
-          </p>
-        </div>
-      </div>
-
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
         {statCards.map((card) => {
           const Icon = card.icon;
           return (
             <Card key={card.label}>
               <CardContent className="flex flex-col items-center p-4 text-center">
-                <div className="rounded-full bg-pale-aqua p-2">
-                  <Icon className="h-5 w-5 text-sky-blue" />
+                <div className="rounded-full bg-secondary p-2">
+                  <Icon className="h-5 w-5 text-primary" />
                 </div>
-                <p className="mt-2 text-2xl font-bold text-charcoal">{card.value}</p>
-                <p className="text-sm text-wing-brown">{card.label}</p>
+                <p className="mt-2 text-2xl font-mono font-bold tabular-nums text-foreground">
+                  {card.value}
+                </p>
+                <p className="text-sm text-muted-foreground">{card.label}</p>
               </CardContent>
             </Card>
           );
@@ -151,18 +133,18 @@ export default async function PlayerProfilePage({ params }: PlayerProfilePagePro
                 return (
                   <div
                     key={metric.uid}
-                    className="flex items-center justify-between rounded-lg bg-pale-aqua/50 p-3"
+                    className="flex items-center justify-between rounded-lg bg-secondary/60 p-3"
                   >
-                    <span className="font-medium text-charcoal">
+                    <span className="font-medium text-foreground">
                       {metric.display_name}
                     </span>
                     <div className="flex items-center gap-3">
-                      <span className="text-lg font-bold text-charcoal">
+                      <span className="text-lg font-bold text-foreground">
                         {Math.round(playerAvg * 10) / 10}
                       </span>
                       <span
                         className={`text-sm ${
-                          isAbove ? "text-turquoise" : "text-coral"
+                          isAbove ? "text-primary" : "text-destructive"
                         }`}
                       >
                         {isAbove ? "+" : ""}
@@ -184,17 +166,17 @@ export default async function PlayerProfilePage({ params }: PlayerProfilePagePro
             <div className="max-h-[400px] overflow-y-auto">
               <table className="w-full">
                 <thead className="sticky top-0 bg-card">
-                  <tr className="border-b border-pale-aqua">
-                    <th className="px-3 py-2 text-left text-sm font-medium text-wing-brown">
+                  <tr className="border-b border-border">
+                    <th className="px-3 py-2 text-left text-sm font-medium text-muted-foreground">
                       Game
                     </th>
-                    <th className="px-3 py-2 text-left text-sm font-medium text-wing-brown">
+                    <th className="px-3 py-2 text-left text-sm font-medium text-muted-foreground">
                       Date
                     </th>
-                    <th className="px-3 py-2 text-right text-sm font-medium text-wing-brown">
+                    <th className="px-3 py-2 text-right text-sm font-medium text-muted-foreground">
                       Score
                     </th>
-                    <th className="px-3 py-2 text-right text-sm font-medium text-wing-brown">
+                    <th className="px-3 py-2 text-right text-sm font-medium text-muted-foreground">
                       Rank
                     </th>
                   </tr>
@@ -203,30 +185,30 @@ export default async function PlayerProfilePage({ params }: PlayerProfilePagePro
                   {gameHistory.map((game) => (
                     <tr
                       key={game.gameId}
-                      className="border-b border-pale-aqua/50 hover:bg-pale-aqua/30"
+                      className="border-b border-border/60 hover:bg-secondary/40"
                     >
                       <td className="px-3 py-2">
                         <Link
                           href={`/games/${game.gameId}`}
-                          className="font-medium text-sky-blue hover:underline"
+                          className="font-medium text-primary hover:underline"
                         >
                           #{game.gameId}
                         </Link>
                       </td>
-                      <td className="px-3 py-2 text-charcoal">
+                      <td className="px-3 py-2 text-foreground">
                         {formatDate(game.date)}
                       </td>
-                      <td className="px-3 py-2 text-right font-medium text-charcoal">
+                      <td className="px-3 py-2 text-right font-medium text-foreground">
                         {game.score}
                       </td>
                       <td className="px-3 py-2 text-right">
                         {game.isWinner ? (
-                          <Badge className="bg-peach text-white">
+                          <Badge className="bg-accent text-accent-foreground">
                             <Trophy className="mr-1 h-3 w-3" />
                             1st
                           </Badge>
                         ) : (
-                          <span className="text-wing-brown">
+                          <span className="text-muted-foreground">
                             {ordinal(game.rank)}
                           </span>
                         )}

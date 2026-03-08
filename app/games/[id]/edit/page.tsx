@@ -66,11 +66,6 @@ export default async function EditGamePage({ params }: EditGamePageProps) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-serif text-3xl font-bold text-charcoal">Edit Game {game.id}</h1>
-        <p className="mt-1 text-wing-brown">Update players, scores, and game details</p>
-      </div>
-
       <NewGameForm
         allPlayers={allPlayers}
         metrics={metrics}

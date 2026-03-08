@@ -25,7 +25,7 @@ interface SortHeaderProps {
 function SortHeader({ field, children, sortField, sortDesc, onSort }: SortHeaderProps) {
   return (
     <th
-      className="cursor-pointer px-4 py-3 text-left text-sm font-medium text-wing-brown hover:text-charcoal"
+      className="cursor-pointer px-4 py-3 text-left text-sm font-medium text-muted-foreground hover:text-foreground"
       onClick={() => onSort(field)}
     >
       <div className="flex items-center gap-1">
@@ -73,8 +73,8 @@ export function Leaderboard({ entries }: LeaderboardProps) {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-pale-aqua">
-                <th className="px-4 py-3 text-left text-sm font-medium text-wing-brown">Player</th>
+              <tr className="border-b border-border">
+                <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Player</th>
                 <SortHeader field="gamesPlayed" sortField={sortField} sortDesc={sortDesc} onSort={handleSort}>Games</SortHeader>
                 <SortHeader field="wins" sortField={sortField} sortDesc={sortDesc} onSort={handleSort}>Wins</SortHeader>
                 <SortHeader field="winRate" sortField={sortField} sortDesc={sortDesc} onSort={handleSort}>Win %</SortHeader>
@@ -84,37 +84,37 @@ export function Leaderboard({ entries }: LeaderboardProps) {
             </thead>
             <tbody>
               {sortedEntries.map((entry) => (
-                <tr key={entry.player.uid} className="border-b border-pale-aqua/50 hover:bg-pale-aqua/30">
+                <tr key={entry.player.uid} className="border-b border-border/60 hover:bg-secondary/40">
                   <td className="px-4 py-3">
                     <Link
                       href={`/players/${entry.player.uid}`}
-                      className="font-medium text-charcoal hover:text-sky-blue hover:underline"
+                      className="font-medium text-foreground hover:text-primary hover:underline"
                     >
                       {entry.player.display_name}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-charcoal">{entry.gamesPlayed}</td>
+                  <td className="px-4 py-3 font-mono tabular-nums text-foreground">{entry.gamesPlayed}</td>
                   <td className={cn(
-                    "px-4 py-3",
-                    entry.wins === maxValues.wins && maxValues.wins > 0 && "bg-sky-blue/10 font-semibold text-sky-blue"
+                    "px-4 py-3 font-mono tabular-nums",
+                    entry.wins === maxValues.wins && maxValues.wins > 0 && "bg-primary/10 font-semibold text-primary"
                   )}>
                     {entry.wins}
                   </td>
                   <td className={cn(
-                    "px-4 py-3",
-                    entry.winRate === maxValues.winRate && maxValues.winRate > 0 && "bg-sky-blue/10 font-semibold text-sky-blue"
+                    "px-4 py-3 font-mono tabular-nums",
+                    entry.winRate === maxValues.winRate && maxValues.winRate > 0 && "bg-primary/10 font-semibold text-primary"
                   )}>
                     {formatPercent(entry.winRate)}
                   </td>
                   <td className={cn(
-                    "px-4 py-3",
-                    entry.avgScore === maxValues.avgScore && maxValues.avgScore > 0 && "bg-sky-blue/10 font-semibold text-sky-blue"
+                    "px-4 py-3 font-mono tabular-nums",
+                    entry.avgScore === maxValues.avgScore && maxValues.avgScore > 0 && "bg-primary/10 font-semibold text-primary"
                   )}>
                     {Math.round(entry.avgScore * 10) / 10}
                   </td>
                   <td className={cn(
-                    "px-4 py-3",
-                    entry.bestScore === maxValues.bestScore && maxValues.bestScore > 0 && "bg-sky-blue/10 font-semibold text-sky-blue"
+                    "px-4 py-3 font-mono tabular-nums",
+                    entry.bestScore === maxValues.bestScore && maxValues.bestScore > 0 && "bg-primary/10 font-semibold text-primary"
                   )}>
                     {entry.bestScore}
                   </td>

@@ -25,13 +25,6 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-serif text-3xl font-bold text-charcoal">Dashboard</h1>
-        <p className="mt-1 text-wing-brown">
-          Overview of your Wingspan game history and player statistics
-        </p>
-      </div>
-
       <SummaryCards stats={stats} />
 
       <div className="grid gap-6 lg:grid-cols-3">

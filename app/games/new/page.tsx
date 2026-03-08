@@ -20,11 +20,6 @@ export default async function NewGamePage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-serif text-3xl font-bold text-charcoal">New Game</h1>
-        <p className="mt-1 text-wing-brown">Record the scores from your latest game</p>
-      </div>
-
       <NewGameForm allPlayers={players} metrics={metrics} playerStats={playerStats} />
     </div>
   );

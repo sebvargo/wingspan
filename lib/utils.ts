@@ -1,24 +1,44 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
-export function formatDate(date: string | Date | null): string {
-  if (!date) return "—";
-  return new Date(date).toLocaleDateString("en-US", {
-    month: "short",
+export function formatPercent(value: number, digits = 1): string {
+  return `${(value * 100).toFixed(digits)}%`
+}
+
+export function formatDate(value: Date | string | null | undefined): string {
+  if (!value) {
+    return "—"
+  }
+
+  const date = value instanceof Date ? value : new Date(value)
+  if (Number.isNaN(date.getTime())) {
+    return "—"
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
-  });
+    month: "short",
+    day: "numeric",
+  }).format(date)
 }
 
-export function formatPercent(value: number): string {
-  return `${(value * 100).toFixed(1)}%`;
-}
+export function ordinal(value: number): string {
+  const mod10 = value % 10
+  const mod100 = value % 100
 
-export function ordinal(n: number): string {
-  const s = ["th", "st", "nd", "rd"];
-  const v = n % 100;
-  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  if (mod10 === 1 && mod100 !== 11) {
+    return `${value}st`
+  }
+  if (mod10 === 2 && mod100 !== 12) {
+    return `${value}nd`
+  }
+  if (mod10 === 3 && mod100 !== 13) {
+    return `${value}rd`
+  }
+
+  return `${value}th`
 }

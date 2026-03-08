@@ -20,12 +20,12 @@ interface MetricRadarChartProps {
 }
 
 const PLAYER_COLORS: Record<string, string> = {
-  anne: "#4FA3D9",
-  dan: "#79C6C4",
+  sebastian: "#2D6B69",
+  anne: "#F26858",
+  maria: "#786453",
   giedrius: "#F5A27F",
-  justina: "#F26A5A",
-  maria: "#7A6A5C",
-  sebastian: "#2F2F2F",
+  dan: "#558F8D",
+  justina: "#A69280",
 };
 
 export function MetricRadarChart({ data, players }: MetricRadarChartProps) {
@@ -67,13 +67,13 @@ export function MetricRadarChart({ data, players }: MetricRadarChartProps) {
               <PolarGrid stroke="#D7ECE8" />
               <PolarAngleAxis
                 dataKey="metric"
-                tick={{ fill: "#7A6A5C", fontSize: 11 }}
+                tick={{ fill: "#786453", fontSize: 11 }}
               />
               <PolarRadiusAxis
                 angle={30}
                 domain={[0, 1]}
                 tickFormatter={(value) => `${Math.round(Number(value) * 100)}%`}
-                tick={{ fill: "#7A6A5C", fontSize: 10 }}
+                tick={{ fill: "#786453", fontSize: 10 }}
               />
               <Tooltip
                 itemSorter={(item) => {
@@ -113,8 +113,8 @@ export function MetricRadarChart({ data, players }: MetricRadarChartProps) {
                   key={player.uid}
                   name={player.display_name}
                   dataKey={player.uid}
-                  stroke={PLAYER_COLORS[player.uid] || "#4FA3D9"}
-                  fill={PLAYER_COLORS[player.uid] || "#4FA3D9"}
+                  stroke={PLAYER_COLORS[player.uid] || "#2D6B69"}
+                  fill={PLAYER_COLORS[player.uid] || "#2D6B69"}
                   fillOpacity={0.1}
                 />
               ))}
