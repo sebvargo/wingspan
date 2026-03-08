@@ -56,11 +56,11 @@ export function PlayerScoreTrendChart({
               <CartesianGrid strokeDasharray="3 3" stroke="#D7ECE8" />
               <XAxis
                 dataKey="game"
-                tick={{ fill: "#7A6A5C", fontSize: 12 }}
+                tick={{ fill: "#786453", fontSize: 12 }}
                 tickFormatter={(value) => `#${value}`}
               />
               <YAxis
-                tick={{ fill: "#7A6A5C", fontSize: 12 }}
+                tick={{ fill: "#786453", fontSize: 12 }}
                 domain={["auto", "auto"]}
               />
               <Tooltip
@@ -87,12 +87,12 @@ export function PlayerScoreTrendChart({
               />
               <ReferenceLine
                 y={avgScore}
-                stroke="#7A6A5C"
+                stroke="#786453"
                 strokeDasharray="5 5"
                 label={{
                   value: `Avg: ${Math.round(avgScore)}`,
                   position: "right",
-                  fill: "#7A6A5C",
+                  fill: "#786453",
                   fontSize: 12,
                 }}
               />
@@ -100,7 +100,7 @@ export function PlayerScoreTrendChart({
                 type="monotone"
                 dataKey="score"
                 name={playerName}
-                stroke="#4FA3D9"
+                stroke="#2D6B69"
                 strokeWidth={2}
                 dot={({ cx, cy, payload }) => (
                   <circle
@@ -108,8 +108,8 @@ export function PlayerScoreTrendChart({
                     cx={cx}
                     cy={cy}
                     r={payload.isWinner ? 6 : 4}
-                    fill={payload.isWinner ? "#F5A27F" : "#4FA3D9"}
-                    stroke={payload.isWinner ? "#F26A5A" : "none"}
+                    fill={payload.isWinner ? "#F5A27F" : "#2D6B69"}
+                    stroke={payload.isWinner ? "#F26858" : "none"}
                     strokeWidth={2}
                   />
                 )}
@@ -118,7 +118,7 @@ export function PlayerScoreTrendChart({
                 type="monotone"
                 dataKey="winningScore"
                 name="Winning Score"
-                stroke="#F26A5A"
+                stroke="#F26858"
                 strokeWidth={2}
                 strokeDasharray="4 4"
                 dot={false}
@@ -126,10 +126,10 @@ export function PlayerScoreTrendChart({
             </LineChart>
           </ResponsiveContainer>
         </div>
-        <p className="mt-2 text-center text-sm text-wing-brown">
-          <span className="text-sky-blue">Blue line</span> is {playerName};{" "}
-          <span className="text-coral">dashed coral line</span> is game-winning score;{" "}
-          <span className="text-peach">orange dots</span> indicate wins.
+        <p className="mt-2 text-center text-sm text-muted-foreground">
+          <span className="text-primary">Teal line</span> is {playerName};{" "}
+          <span className="text-accent">dashed coral line</span> is game-winning score;{" "}
+          <span className="text-accent">orange dots</span> indicate wins.
         </p>
       </CardContent>
     </Card>

@@ -5,9 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScoreGrid } from "@/components/game/score-grid";
 import { DeleteGameButton } from "@/components/game/delete-game-button";
-import { Trophy, Calendar, MapPin, ArrowLeft, FileText } from "lucide-react";
+import { Trophy, FileText, Pencil } from "lucide-react";
 import { getGameById, getMetrics, getLeaderboard } from "@/lib/queries";
-import { formatDate } from "@/lib/utils";
 
 interface GameDetailPageProps {
   params: Promise<{ id: string }>;
@@ -37,53 +36,20 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <Link href="/games">
-            <Button variant="outline" size="icon">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
-          <div>
-            <h1 className="font-serif text-3xl font-bold text-charcoal">
-              Game {game.id}
-            </h1>
-            <div className="mt-1 flex items-center gap-4 text-sm text-wing-brown">
-              <span className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                {formatDate(game.date)}
-              </span>
-              {game.location && (
-                <span className="flex items-center gap-1">
-                  <MapPin className="h-4 w-4" />
-                  {game.location}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link href={`/games/${game.id}/edit`}>
-            <Button variant="outline">Edit Game</Button>
-          </Link>
-          <DeleteGameButton gameId={game.id} />
-        </div>
-      </div>
-
-      <Card className="border-l-4 border-l-sky-blue bg-sky-blue/5">
+      <Card className="border-l-4 border-l-primary bg-primary/5">
         <CardContent className="flex items-center gap-4 p-6">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-sky-blue/20">
-            <Trophy className="h-7 w-7 text-sky-blue" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/20">
+            <Trophy className="h-7 w-7 text-primary" />
           </div>
           <div>
-            <p className="text-sm font-medium text-wing-brown">
+            <p className="text-sm font-medium text-muted-foreground">
               {game.winners.length > 1 ? "Winners" : "Winner"}
             </p>
-            <p className="text-2xl font-bold text-charcoal">{winnerNames}</p>
-            <p className="text-sm text-wing-brown">with {game.maxTotal} points</p>
+            <p className="text-2xl font-bold text-foreground">{winnerNames}</p>
+            <p className="text-sm text-muted-foreground">with {game.maxTotal} points</p>
           </div>
           {game.winners.length > 1 && (
-            <Badge className="ml-auto bg-peach text-white">Tie</Badge>
+            <Badge className="ml-auto bg-accent text-accent-foreground">Tie</Badge>
           )}
         </CardContent>
       </Card>
@@ -94,6 +60,17 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
         results={game.results}
         totals={game.totals}
         winners={game.winners}
+        actions={
+          <>
+            <Link href={`/games/${game.id}/edit`}>
+              <Button variant="outline" className="gap-2">
+                <Pencil className="h-4 w-4" />
+                Edit Game
+              </Button>
+            </Link>
+            <DeleteGameButton gameId={game.id} />
+          </>
+        }
       />
 
       {game.notes && (
@@ -105,7 +82,7 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-charcoal">{game.notes}</p>
+            <p className="text-foreground">{game.notes}</p>
           </CardContent>
         </Card>
       )}
@@ -125,21 +102,21 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
               return (
                 <div
                   key={player.uid}
-                  className="rounded-lg bg-pale-aqua/50 p-4"
+                  className="rounded-lg bg-secondary/60 p-4"
                 >
                   <Link
                     href={`/players/${player.uid}`}
-                    className="font-medium text-charcoal hover:text-sky-blue hover:underline"
+                    className="font-medium text-foreground hover:text-primary hover:underline"
                   >
                     {player.display_name}
                   </Link>
-                  <div className="mt-2 text-sm text-wing-brown">
+                  <div className="mt-2 text-sm text-muted-foreground">
                     <p>Average: {Math.round(avgScore * 10) / 10}</p>
                     <p>
                       This game: {gameScore}{" "}
                       <span
                         className={
-                          diff > 0 ? "text-turquoise" : diff < 0 ? "text-coral" : ""
+                          diff > 0 ? "text-primary" : diff < 0 ? "text-destructive" : ""
                         }
                       >
                         ({diff > 0 ? "+" : ""}

@@ -15,24 +15,28 @@ export function SummaryCards({ stats }: SummaryCardsProps) {
       value: stats.totalGames,
       subtext: "since Game 1",
       icon: Users,
+      href: "/games",
     },
     {
       label: "Most Wins",
       value: `${stats.mostWins.player.display_name} (${stats.mostWins.wins})`,
       subtext: `${formatPercent(stats.mostWins.winRate)} win rate`,
       icon: Trophy,
+      href: stats.mostWins.player.uid ? `/players/${stats.mostWins.player.uid}` : "/players",
     },
     {
       label: "Highest Score",
       value: stats.highestScore.score,
       subtext: `${stats.highestScore.player.display_name}, Game ${stats.highestScore.gameId}`,
       icon: TrendingUp,
+      href: stats.highestScore.gameId ? `/games/${stats.highestScore.gameId}` : "/games",
     },
     {
       label: "Average Score",
       value: Math.round(stats.avgScore * 10) / 10,
       subtext: "across all games",
       icon: Target,
+      href: "/games",
     },
     {
       label: "Most Recent",
@@ -52,25 +56,27 @@ export function SummaryCards({ stats }: SummaryCardsProps) {
             <div className="flex items-start justify-between">
               <div className="space-y-1">
                 <p className="text-sm font-medium text-muted-foreground">{card.label}</p>
-                <p className="text-2xl font-bold text-charcoal">{card.value}</p>
-                <p className="text-xs text-wing-brown">{card.subtext}</p>
+                <p className="text-2xl font-mono font-bold tabular-nums text-foreground">
+                  {card.value}
+                </p>
+                <p className="text-xs text-muted-foreground">{card.subtext}</p>
               </div>
-              <div className="rounded-full bg-pale-aqua p-2">
-                <Icon className="h-5 w-5 text-sky-blue" />
+              <div className="rounded-full bg-secondary p-2">
+                <Icon className="h-5 w-5 text-primary" />
               </div>
             </div>
           </Card>
         );
 
-        if (card.href) {
-          return (
-            <Link key={card.label} href={card.href} className="transition-transform hover:scale-[1.02]">
-              {content}
-            </Link>
-          );
-        }
-
-        return content;
+        return (
+          <Link
+            key={card.label}
+            href={card.href}
+            className="transition-transform hover:scale-[1.02]"
+          >
+            {content}
+          </Link>
+        );
       })}
     </div>
   );

@@ -19,12 +19,12 @@ interface ScoreTrendChartProps {
 }
 
 const PLAYER_COLORS: Record<string, string> = {
-  anne: "#4FA3D9",
-  dan: "#79C6C4",
+  sebastian: "#2D6B69",
+  anne: "#F26858",
+  maria: "#786453",
   giedrius: "#F5A27F",
-  justina: "#F26A5A",
-  maria: "#7A6A5C",
-  sebastian: "#2F2F2F",
+  dan: "#558F8D",
+  justina: "#A69280",
 };
 
 export function ScoreTrendChart({ data, players }: ScoreTrendChartProps) {
@@ -40,11 +40,11 @@ export function ScoreTrendChart({ data, players }: ScoreTrendChartProps) {
               <CartesianGrid strokeDasharray="3 3" stroke="#D7ECE8" />
               <XAxis
                 dataKey="game"
-                tick={{ fill: "#7A6A5C", fontSize: 12 }}
+                tick={{ fill: "#786453", fontSize: 12 }}
                 tickFormatter={(value) => `#${value}`}
               />
               <YAxis
-                tick={{ fill: "#7A6A5C", fontSize: 12 }}
+                tick={{ fill: "#786453", fontSize: 12 }}
                 domain={[40, "auto"]}
               />
               <Tooltip
@@ -66,9 +66,9 @@ export function ScoreTrendChart({ data, players }: ScoreTrendChartProps) {
                   type="monotone"
                   dataKey={player.uid}
                   name={player.display_name}
-                  stroke={PLAYER_COLORS[player.uid] || "#4FA3D9"}
+                  stroke={PLAYER_COLORS[player.uid] || "#2D6B69"}
                   strokeWidth={2}
-                  dot={{ fill: PLAYER_COLORS[player.uid] || "#4FA3D9", strokeWidth: 0, r: 3 }}
+                  dot={{ fill: PLAYER_COLORS[player.uid] || "#2D6B69", strokeWidth: 0, r: 3 }}
                   connectNulls
                 />
               ))}

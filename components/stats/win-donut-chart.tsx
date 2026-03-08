@@ -8,12 +8,12 @@ interface WinDonutChartProps {
 }
 
 const PLAYER_COLORS: Record<string, string> = {
-  anne: "#4FA3D9",
-  dan: "#79C6C4",
+  sebastian: "#2D6B69",
+  anne: "#F26858",
+  maria: "#786453",
   giedrius: "#F5A27F",
-  justina: "#F26A5A",
-  maria: "#7A6A5C",
-  sebastian: "#2F2F2F",
+  dan: "#558F8D",
+  justina: "#A69280",
 };
 
 export function WinDonutChart({ data }: WinDonutChartProps) {
@@ -43,7 +43,7 @@ export function WinDonutChart({ data }: WinDonutChartProps) {
                 {data.map((entry) => (
                   <Cell
                     key={entry.uid}
-                    fill={PLAYER_COLORS[entry.uid] || "#4FA3D9"}
+                    fill={PLAYER_COLORS[entry.uid] || "#2D6B69"}
                   />
                 ))}
               </Pie>

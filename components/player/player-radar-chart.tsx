@@ -58,13 +58,13 @@ export function PlayerRadarChart({
               <PolarGrid stroke="#D7ECE8" />
               <PolarAngleAxis
                 dataKey="metric"
-                tick={{ fill: "#7A6A5C", fontSize: 11 }}
+                tick={{ fill: "#786453", fontSize: 11 }}
               />
               <PolarRadiusAxis
                 angle={30}
                 domain={[0, 1]}
                 tickFormatter={(value) => `${Math.round(Number(value) * 100)}%`}
-                tick={{ fill: "#7A6A5C", fontSize: 10 }}
+                tick={{ fill: "#786453", fontSize: 10 }}
               />
               <Tooltip
                 itemSorter={(item) => {
@@ -103,15 +103,15 @@ export function PlayerRadarChart({
               <Radar
                 name={playerName}
                 dataKey="player"
-                stroke="#4FA3D9"
-                fill="#4FA3D9"
+                stroke="#2D6B69"
+                fill="#2D6B69"
                 fillOpacity={0.3}
               />
               <Radar
                 name="Group Average"
                 dataKey="group"
-                stroke="#7A6A5C"
-                fill="#7A6A5C"
+                stroke="#786453"
+                fill="#786453"
                 fillOpacity={0.1}
                 strokeDasharray="5 5"
               />
