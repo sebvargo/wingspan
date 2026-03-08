@@ -48,6 +48,10 @@ export function ScoreTrendChart({ data, players }: ScoreTrendChartProps) {
                 domain={[40, "auto"]}
               />
               <Tooltip
+                itemSorter={(item) => {
+                  const value = typeof item.value === "number" ? item.value : Number(item.value);
+                  return Number.isNaN(value) ? 0 : -value;
+                }}
                 contentStyle={{
                   backgroundColor: "#FFFFFF",
                   border: "1px solid #D7ECE8",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,29 @@ interface LeaderboardProps {
 }
 
 type SortField = "winRate" | "wins" | "gamesPlayed" | "avgScore" | "bestScore";
+
+interface SortHeaderProps {
+  field: SortField;
+  children: ReactNode;
+  sortField: SortField;
+  sortDesc: boolean;
+  onSort: (field: SortField) => void;
+}
+
+function SortHeader({ field, children, sortField, sortDesc, onSort }: SortHeaderProps) {
+  return (
+    <th
+      className="cursor-pointer px-4 py-3 text-left text-sm font-medium text-wing-brown hover:text-charcoal"
+      onClick={() => onSort(field)}
+    >
+      <div className="flex items-center gap-1">
+        {children}
+        {sortField === field &&
+          (sortDesc ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />)}
+      </div>
+    </th>
+  );
+}
 
 export function Leaderboard({ entries }: LeaderboardProps) {
   const [sortField, setSortField] = useState<SortField>("winRate");
@@ -33,20 +56,6 @@ export function Leaderboard({ entries }: LeaderboardProps) {
     }
   };
 
-  const SortHeader = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
-    <th
-      className="cursor-pointer px-4 py-3 text-left text-sm font-medium text-wing-brown hover:text-charcoal"
-      onClick={() => handleSort(field)}
-    >
-      <div className="flex items-center gap-1">
-        {children}
-        {sortField === field && (
-          sortDesc ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />
-        )}
-      </div>
-    </th>
-  );
-
   // Find the max value in each numeric column for highlighting
   const maxValues = {
     winRate: Math.max(...entries.map((e) => e.winRate)),
@@ -66,11 +75,11 @@ export function Leaderboard({ entries }: LeaderboardProps) {
             <thead>
               <tr className="border-b border-pale-aqua">
                 <th className="px-4 py-3 text-left text-sm font-medium text-wing-brown">Player</th>
-                <SortHeader field="gamesPlayed">Games</SortHeader>
-                <SortHeader field="wins">Wins</SortHeader>
-                <SortHeader field="winRate">Win %</SortHeader>
-                <SortHeader field="avgScore">Avg Score</SortHeader>
-                <SortHeader field="bestScore">Best</SortHeader>
+                <SortHeader field="gamesPlayed" sortField={sortField} sortDesc={sortDesc} onSort={handleSort}>Games</SortHeader>
+                <SortHeader field="wins" sortField={sortField} sortDesc={sortDesc} onSort={handleSort}>Wins</SortHeader>
+                <SortHeader field="winRate" sortField={sortField} sortDesc={sortDesc} onSort={handleSort}>Win %</SortHeader>
+                <SortHeader field="avgScore" sortField={sortField} sortDesc={sortDesc} onSort={handleSort}>Avg Score</SortHeader>
+                <SortHeader field="bestScore" sortField={sortField} sortDesc={sortDesc} onSort={handleSort}>Best</SortHeader>
               </tr>
             </thead>
             <tbody>
