@@ -14,6 +14,18 @@ export async function getPlayers(): Promise<Player[]> {
   return rows as Player[];
 }
 
+export async function getAppCounts(): Promise<{ playerCount: number; gameCount: number }> {
+  const [playerRows, gameRows] = await Promise.all([
+    sql`SELECT COUNT(*)::int AS count FROM players`,
+    sql`SELECT COUNT(*)::int AS count FROM games`,
+  ]);
+
+  return {
+    playerCount: Number((playerRows as Array<{ count: number }>)[0]?.count ?? 0),
+    gameCount: Number((gameRows as Array<{ count: number }>)[0]?.count ?? 0),
+  };
+}
+
 export async function getMetrics(): Promise<Metric[]> {
   const rows = await sql`SELECT uid, display_name, type, description, sort_order FROM metrics ORDER BY sort_order`;
   return rows as Metric[];
