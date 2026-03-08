@@ -1,7 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display } from "next/font/google";
+import { Playfair_Display, Geist } from "next/font/google";
 import { Nav } from "@/components/layout/nav";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
@@ -23,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={playfairDisplay.variable}>
+    <html lang="en" className={cn("font-sans", geist.variable)}>
       <body className="min-h-screen bg-background antialiased">
         <Nav />
         <main className="container mx-auto px-4 py-8">{children}</main>
